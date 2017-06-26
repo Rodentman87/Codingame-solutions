@@ -1,0 +1,167 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+    int n; // the number of cards for player 1
+    cin >> n; cin.ignore();
+    
+    vector<int> P1Cards;
+    
+    for (int i = 0; i < n; i++) {
+        string cardp1; // the n cards of player 1
+        cin >> cardp1; cin.ignore();
+        
+        cerr << cardp1;
+        
+        if(cardp1[0] == 'J') {   
+            P1Cards.resize(P1Cards.size() + 1, 11);
+            //cerr << "11" << "|";
+        } else if(cardp1[0] == 'Q') {
+            P1Cards.resize(P1Cards.size() + 1, 12);   
+            //cerr << "12" << "|";
+        } else if(cardp1[0] == 'K') {
+            P1Cards.resize(P1Cards.size() + 1, 13);
+            //cerr << "13" << "|";
+        } else if(cardp1[0] == 'A') {
+            P1Cards.resize(P1Cards.size() + 1, 14); 
+            //cerr << "14" << "|";
+        } else if(cardp1[0] == '1' && cardp1[1] == '0') {
+            P1Cards.resize(P1Cards.size() + 1, 10);   
+            //cerr << "10" << "|";
+        } else {
+            P1Cards.resize(P1Cards.size() + 1, cardp1[0] - 48);  
+            //cerr << cardp1[0] - 48 << "|";
+        }
+        
+    }
+    
+    cerr << endl;
+    
+    int m; // the number of cards for player 2
+    cin >> m; cin.ignore();
+    
+    vector<int> P2Cards;
+    
+    for (int i = 0; i < m; i++) {
+        string cardp2; // the m cards of player 2
+        cin >> cardp2; cin.ignore();
+        
+        cerr << cardp2;
+        
+        if(cardp2[0] == 'J') {   
+            P2Cards.resize(P2Cards.size() + 1, 11);
+            //cerr << "11" << "|";
+        } else if(cardp2[0] == 'Q') {
+            P2Cards.resize(P2Cards.size() + 1, 12);  
+            //cerr << "12" << "|";
+        } else if(cardp2[0] == 'K') {
+            P2Cards.resize(P2Cards.size() + 1, 13);
+            //cerr << "13" << "|";
+        } else if(cardp2[0] == 'A') {
+            P2Cards.resize(P2Cards.size() + 1, 14);
+            //cerr << "14" << "|";
+        } else if(cardp2[0] == '1' && cardp2[1] == '0') {
+            P2Cards.resize(P2Cards.size() + 1, 10);
+            //cerr << "10" << "|";
+        } else {
+            P2Cards.resize(P2Cards.size() + 1, cardp2[0] - 48);
+            //cerr << cardp2[0] - 48 << "|";
+        }
+        
+    }
+    
+    cerr << endl;
+    
+    int turns = 0;
+    int curP1;
+    int curP2;
+    vector<int> warCardsP1;
+    vector<int> warCardsP2;
+    int cardPtr = 0;
+    
+    while(n > 0 && m > 0) {
+        
+         curP1 = P1Cards.at(cardPtr);
+         curP2 = P2Cards.at(cardPtr);
+         
+         cerr << curP1 << " " << curP2 << endl << n << " " << m << endl;
+         
+         if(curP1 > curP2) {
+            
+               for(int i = 0; i < warCardsP1.size(); i++) {
+                P1Cards.resize(P1Cards.size() + 1, warCardsP1.at(i));
+               }
+               P1Cards.resize(P1Cards.size() + 1, curP1);
+               for(int i = 0; i < warCardsP2.size(); i++) {
+                P1Cards.resize(P1Cards.size() + 1, warCardsP2.at(i));
+               }
+               P1Cards.resize(P1Cards.size() + 1, curP2);
+               cardPtr++;
+               n += 1 + warCardsP1.size();
+               m -= 1;
+               turns++;
+               cerr << "P1 Wins" << endl;
+               warCardsP1.resize(0);
+               warCardsP2.resize(0);
+             
+         } else if(curP2 > curP1) {
+             
+               for(int i = 0; i < warCardsP1.size(); i++) {
+                P2Cards.resize(P2Cards.size() + 1, warCardsP1.at(i));
+               }
+               P2Cards.resize(P2Cards.size() + 1, curP1);
+               for(int i = 0; i < warCardsP2.size(); i++) {
+                P2Cards.resize(P2Cards.size() + 1, warCardsP2.at(i));
+               }
+               P2Cards.resize(P2Cards.size() + 1, curP2);
+               cardPtr++;
+               n -= 1;
+               m += 1 + warCardsP2.size();
+               turns++;
+               cerr << "P2 Wins" << endl;
+               warCardsP1.resize(0);
+               warCardsP2.resize(0);
+             
+         } else if(curP1 == curP2) {
+             
+                if(P2Cards.size() - cardPtr < 5 || P1Cards.size() - cardPtr < 5)
+                    goto end;
+                    
+               warCardsP1.resize(warCardsP1.size() + 1, curP1);
+               warCardsP1.resize(warCardsP1.size() + 1, P1Cards.at(cardPtr + 1));
+               warCardsP1.resize(warCardsP1.size() + 1, P1Cards.at(cardPtr + 2));
+               warCardsP1.resize(warCardsP1.size() + 1, P1Cards.at(cardPtr + 3));
+               warCardsP2.resize(warCardsP2.size() + 1, curP2);
+               warCardsP2.resize(warCardsP2.size() + 1, P2Cards.at(cardPtr + 1));
+               warCardsP2.resize(warCardsP2.size() + 1, P2Cards.at(cardPtr + 2));
+               warCardsP2.resize(warCardsP2.size() + 1, P2Cards.at(cardPtr + 3));
+               cardPtr += 4;
+               n -= 4;
+               m -= 4;
+               cerr << "War" << endl;
+             
+         }
+        
+        cerr << turns << endl << n << " " << m << endl << "--------------" << endl;
+        
+    }
+    
+    end:
+    
+    if(m == 0) {
+        cout << "1 " << turns << endl;
+    } else if(n == 0) {
+        cout << "2 " << turns << endl;
+    } else {
+        cout << "PAT" << endl;
+    }
+}
